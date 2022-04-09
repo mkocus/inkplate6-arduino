@@ -39,6 +39,10 @@ void setup() {
   if (sleeper.isWakeupByButton()){
     showControlScreen();
 
+    if (!display.tsInit(true)) {
+      Serial.println("ERROR: Touchscreen init failed!");
+    }
+
     xTaskCreatePinnedToCore(
                     touchLoop,   /* Task function. */
                     "Touch Loop",/* name of task. */
@@ -46,7 +50,7 @@ void setup() {
                     NULL,        /* parameter of the task */
                     1,           /* priority of the task */
                     NULL,        /* Task handle to keep track of created task */
-                    1);          /* pin task to core 0 */                  
+                    0);          /* pin task to core 0 */                  
 
     xTaskCreatePinnedToCore(
                       renderLoop,   /* Task function. */
@@ -55,7 +59,7 @@ void setup() {
                       NULL,        /* parameter of the task */
                       1,           /* priority of the task */
                       NULL,        /* Task handle to keep track of created task */
-                      0);          /* pin task to core 1 */
+                      1);          /* pin task to core 1 */
 
     disableCore0WDT();
     disableCore1WDT();
@@ -73,10 +77,6 @@ void loop() {
 
 void touchLoop(void* pvParameters ){
   Serial.println("Task touchLoop running on core " + String(xPortGetCoreID()));
-
-  if (!display.tsInit(true)) {
-    Serial.println("ERROR: Touchscreen init failed!");
-  }
 
   for(;;){
     if (display.tsAvailable()){

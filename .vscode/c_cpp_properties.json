@@ -9,7 +9,8 @@
                 "C:\\Users\\Marcin\\Documents\\Arduino\\libraries\\arduino_607589\\src",
                 "C:\\Users\\Marcin\\Documents\\Arduino\\libraries\\arduino_507644\\src",
                 "C:\\Users\\Marcin\\Documents\\Arduino\\libraries\\arduino_685488\\src",
-                "D:\\Hobby\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
+                "D:\\Hobby\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
+                "C:\\Users\\Marcin\\Documents\\Arduino\\Inkplate_HA_Dashboard"
             ],
             "defines": [
                 "_DEBUG",
