@@ -23,7 +23,7 @@ void MqttManager::sendSystemInfo() {
     mqttClient.loop();
 
     int temperature = display.readTemperature();
-    float voltage = display.readBattery();
+    double voltage = display.readBattery();
 
     int tmp = (1-(4.1-voltage)/(4.1-3.3))*100;
     int perc = 100;

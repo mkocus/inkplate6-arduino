@@ -16,9 +16,9 @@ void btn1Callback(){
   Serial.println("Button clicked");
 }
 
-Button btn1(display, 100, 100, 200, 200, &btn1Callback);
-Button btn2(display, 400, 100, 200, 200, &btn1Callback);
-Button btn3(display, 700, 100, 200, 200, &btn1Callback);
+Button btn1(display, "BTN1", 100, 100, 200, 200, &btn1Callback);
+Button btn2(display, "BTN2", 400, 100, 200, 200, &btn1Callback);
+Button btn3(display, "BTN3", 700, 100, 200, 200, &btn1Callback);
 
 unsigned long uptime = 0;
 int currentPage = 0;
@@ -37,11 +37,12 @@ void setup() {
   sleeper.printWakeupReason();
   
   if (sleeper.isWakeupByButton()){
-    showControlScreen();
 
     if (!display.tsInit(true)) {
       Serial.println("ERROR: Touchscreen init failed!");
     }
+
+    showControlScreen();
 
     xTaskCreatePinnedToCore(
                     touchLoop,   /* Task function. */
@@ -113,6 +114,7 @@ void showBaseScreen() {
   Serial.println("Showing base screen");
   currentPage = 0;
   wifi.fastConnect();
+  mqtt.sendSystemInfo();
   display.selectDisplayMode(INKPLATE_3BIT);
   display.clearDisplay();
   if (!display.drawImage("http://192.168.50.201:5000/", display.PNG, 0, 0, 1, 0)) {
@@ -136,6 +138,5 @@ void showControlScreen() {
   display.display(true);
   Serial.println("Display called");
   wifi.fastConnect();
-  mqtt.sendSystemInfo();
   uptime = millis();
 }
