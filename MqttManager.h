@@ -19,6 +19,8 @@ private:
 
     WiFiClient wifiClient = WiFiClient();
     PubSubClient mqttClient = PubSubClient(mqttBroker, 1883, wifiClient);
+
+    void publishControlMsg(const char* msg);
     
 public:
     MqttManager(Inkplate& display) : display(display) { }
@@ -26,6 +28,10 @@ public:
 
     void connect();
     void sendSystemInfo();
+    void turnOffAllLights();
+    void startClean();
+    void stopClean();
+    void gotoDock();
 };
 
 

@@ -13,12 +13,32 @@ WifiManager wifi;
 
 // ui components
 void btn1Callback(){
-  Serial.println("Button clicked");
+  Serial.println("Button 1 clicked");
+  mqtt.turnOffAllLights();
 }
 
-Button btn1(display, "BTN1", 100, 100, 200, 200, &btn1Callback);
-Button btn2(display, "BTN2", 400, 100, 200, 200, &btn1Callback);
-Button btn3(display, "BTN3", 700, 100, 200, 200, &btn1Callback);
+void btn2Callback(){
+  Serial.println("Button 2 clicked");
+  mqtt.startClean();
+}
+
+void btn3Callback(){
+  Serial.println("Button 3 clicked");
+  mqtt.stopClean();
+}
+
+void btn4Callback(){
+  Serial.println("Button 4 clicked");
+  mqtt.gotoDock();
+}
+
+// 1st row
+Button btn1(display, "Lights Off", 100, 100, 200, 200, &btn1Callback);
+
+// 2nd row
+Button btn2(display, "Start clean", 100, 400, 200, 200, &btn2Callback);
+Button btn3(display, "Stop clean", 400, 400, 200, 200, &btn3Callback);
+Button btn4(display, "Go to dock", 700, 400, 200, 200, &btn4Callback);
 
 unsigned long uptime = 0;
 int currentPage = 0;
@@ -89,7 +109,7 @@ void touchLoop(void* pvParameters ){
         Serial.println("Touch: " + String(x[0]) + ", " + String(y[0]));
       }
       bool touched = n > 0;
-      if (btn1.loop(x[0], y[0], touched) || btn2.loop(x[0], y[0], touched) || btn3.loop(x[0], y[0], touched)) {
+      if (btn1.loop(x[0], y[0], touched) || btn2.loop(x[0], y[0], touched) || btn3.loop(x[0], y[0], touched) || btn4.loop(x[0], y[0], touched)) {
         requestUpdate = true;
       }
     }
@@ -128,15 +148,11 @@ void showControlScreen() {
   Serial.println("Showing control screen");
   currentPage = 1;
   display.selectDisplayMode(INKPLATE_1BIT);
-  display.setTextColor(BLACK);
-  display.setCursor(150, 320);
-  display.setTextSize(4);
-  display.print("Welcome to Inkplate 6PLUS!");
   btn1.draw();
   btn2.draw();
   btn3.draw();
+  btn4.draw();
   display.display(true);
-  Serial.println("Display called");
   wifi.fastConnect();
   uptime = millis();
 }

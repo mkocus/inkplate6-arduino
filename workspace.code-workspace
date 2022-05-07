@@ -2,15 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "..\\..\\..\\AppData\\Local\\Arduino15\\packages\\Croduino_Boards\\hardware\\Inkplate\\1.0.1\\libraries\\WiFi"
-		},
-		{
-			"path": "D:\\Hobby\\Arduino\\libraries\\WiFi"
-		},
-		{
-			"path": "..\\libraries\\Inkplate-Arduino-library-master"
 		}
 	],
 	"settings": {}

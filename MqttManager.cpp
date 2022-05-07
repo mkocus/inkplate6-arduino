@@ -13,14 +13,28 @@ void MqttManager::connect() {
             delay(5000);
         }
     }
+    mqttClient.loop();
+}
+
+void MqttManager::publishControlMsg(const char* msg) {
+    if (!mqttClient.connected()){
+        connect();
+    }
+
+    auto state = "{\"action\": \"" + String(msg) + "\"}";
+    Serial.println(state);
+
+    if (mqttClient.publish("zigbee2mqtt/Inkplate-Control", state.c_str())) {
+        Serial.println("Mqtt state published.");
+    } else {
+        Serial.println("Mqtt state publish failed.");
+    }
 }
 
 void MqttManager::sendSystemInfo() {
     if (!mqttClient.connected()){
         connect();
     }
-
-    mqttClient.loop();
 
     int temperature = display.readTemperature();
     double voltage = display.readBattery();
@@ -34,11 +48,27 @@ void MqttManager::sendSystemInfo() {
     Serial.println(msg);
     auto state = "{\"temperature\": " + String(temperature) + ",\"voltage\": " + String(voltage) + ",\"battery\": " + String(perc) + "}";
 
-    char* tab = new char[msg.length() + 1];
-    strcpy(tab, state.c_str());
-    if (mqttClient.publish("zigbee2mqtt/Inkplate", tab)) {
+    // char* tab = new char[state.length() + 1];
+    // strcpy(tab, state.c_str());
+    if (mqttClient.publish("zigbee2mqtt/Inkplate", state.c_str())) {
         Serial.println("Mqtt state published.");
     } else {
         Serial.println("Mqtt state publish failed.");
     }
+}
+
+void MqttManager::turnOffAllLights() {
+    this->publishControlMsg("turnOffAllLights");
+}
+
+void MqttManager::startClean() {
+    this->publishControlMsg("startClean");
+}
+
+void MqttManager::stopClean() {
+    this->publishControlMsg("stopClean");
+}
+
+void MqttManager::gotoDock() {
+    this->publishControlMsg("gotoDock");
 }
