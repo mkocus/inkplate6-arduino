@@ -39,7 +39,7 @@ void MqttManager::sendSystemInfo() {
     int temperature = display.readTemperature();
     double voltage = display.readBattery();
 
-    int tmp = (1-(4.1-voltage)/(4.1-3.3))*100;
+    int tmp = (1-(4.35-voltage)/(4.35-3.3))*100;
     int perc = 100;
     if (tmp < 100) perc = tmp;
 
@@ -48,8 +48,6 @@ void MqttManager::sendSystemInfo() {
     Serial.println(msg);
     auto state = "{\"temperature\": " + String(temperature) + ",\"voltage\": " + String(voltage) + ",\"battery\": " + String(perc) + "}";
 
-    // char* tab = new char[state.length() + 1];
-    // strcpy(tab, state.c_str());
     if (mqttClient.publish("zigbee2mqtt/Inkplate", state.c_str())) {
         Serial.println("Mqtt state published.");
     } else {

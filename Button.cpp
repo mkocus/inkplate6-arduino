@@ -1,4 +1,5 @@
 #include "Button.h"
+#include "Fonts/FreeSansBold12pt7b.h"
 
 bool Button::touchInside(int touchX, int touchY) {
   auto x2 = x + w;
@@ -8,20 +9,24 @@ bool Button::touchInside(int touchX, int touchY) {
 
 void Button::printText() {
   display.setTextSize(textSize);
-  display.setCursor(x + (w / 2) - (strlen(txt) * 3 * textSize),
-                    y + (h / 2) - (4 * textSize));
+  // display.setCursor(x + (w / 2) - (strlen(txt) * 3 * textSize),
+  //                   y + (h / 2) - (4 * textSize));
+  display.setCursor(x + (w / 2) - (strlen(txt) * 6),
+                    y + (h / 2));
+
   display.print(txt);
 }
 
 void Button::draw() {
-  display.fillRect(x, y, w, h, WHITE);
-  display.drawRect(x, y, w, h, BLACK);
+  display.fillRoundRect(x, y, w, h, roundRadius, WHITE);
+  display.drawRoundRect(x, y, w, h, roundRadius, BLACK);
+  display.setFont(&FreeSansBold12pt7b);
   display.setTextColor(BLACK);
   this->printText();
 }
 
 void Button::drawInverted() {
-  display.fillRect(x, y, w, h, BLACK);
+  display.fillRoundRect(x, y, w, h, roundRadius, BLACK);
   display.setTextColor(WHITE);
   this->printText();
 }

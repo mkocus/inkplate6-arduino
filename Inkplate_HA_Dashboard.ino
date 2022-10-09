@@ -33,12 +33,14 @@ void btn4Callback(){
 }
 
 // 1st row
-Button btn1(display, "Lights Off", 100, 100, 200, 200, &btn1Callback);
+Button btn1(display, "Lights Off", 100, 100, 200, 100, &btn1Callback);
 
 // 2nd row
-Button btn2(display, "Start clean", 100, 400, 200, 200, &btn2Callback);
-Button btn3(display, "Stop clean", 400, 400, 200, 200, &btn3Callback);
-Button btn4(display, "Go to dock", 700, 400, 200, 200, &btn4Callback);
+Button btn2(display, "Start clean", 100, 300, 200, 100, &btn2Callback);
+Button btn3(display, "Stop clean", 400, 300, 200, 100, &btn3Callback);
+Button btn4(display, "Go to dock", 700, 300, 200, 100, &btn4Callback);
+
+Button buttons[] = {btn1, btn2, btn3, btn4};
 
 unsigned long uptime = 0;
 int currentPage = 0;
@@ -49,6 +51,10 @@ void setup() {
   Serial.begin(115200);
   Serial.println("START");
   display.begin();
+
+  esp_bt_controller_disable();
+
+//  display.rtcSetTime(20, 20, 0);
 
   // Turn off frontlight
   display.frontlight(false);
@@ -112,6 +118,13 @@ void touchLoop(void* pvParameters ){
       if (btn1.loop(x[0], y[0], touched) || btn2.loop(x[0], y[0], touched) || btn3.loop(x[0], y[0], touched) || btn4.loop(x[0], y[0], touched)) {
         requestUpdate = true;
       }
+
+      // for (auto btn : buttons) {
+      //   if (btn.loop(x[0], y[0], touched)) {
+      //     requestUpdate = true;
+      //     break;
+      //   }
+      // }
     }
   }
 }
@@ -137,9 +150,11 @@ void showBaseScreen() {
   mqtt.sendSystemInfo();
   display.selectDisplayMode(INKPLATE_3BIT);
   display.clearDisplay();
-  if (!display.drawImage("http://192.168.50.201:5000/", display.PNG, 0, 0, 1, 0)) {
+  Serial.println("Downloading image");
+  if (!display.drawImage("http://192.168.50.201:5000/", display.PNG, 0, 0, 1, 0, 1)) {
     Serial.println("ERROR: Image drawing failed!");
   }
+  Serial.println("Image downloaded and displayed.");
   display.display(true);
   sleeper.gotoSleep();
 }
@@ -148,10 +163,7 @@ void showControlScreen() {
   Serial.println("Showing control screen");
   currentPage = 1;
   display.selectDisplayMode(INKPLATE_1BIT);
-  btn1.draw();
-  btn2.draw();
-  btn3.draw();
-  btn4.draw();
+  for (auto btn: buttons) btn.draw();
   display.display(true);
   wifi.fastConnect();
   uptime = millis();

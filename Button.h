@@ -19,7 +19,8 @@ private:
     int touchTime = 0;
     bool currentlyClicked = false;
     int instanceNr;
-    int textSize = 4;
+    int textSize = 1;
+    int roundRadius = 15;
 
     bool touchInside(int touchX, int touchY);
 

@@ -3,8 +3,9 @@
 
 #include "Inkplate.h"
 
-#define uS_TO_S_FACTOR 1000000
-#define TIME_TO_SLEEP  600
+#define US_TO_MIN_FACTOR 60000000ULL    // unsigned long long == uint_64
+#define SLEEP_TIME_SHORT 20
+#define SLEEP_TIME_LONG 300
 
 class SleepManager {
 private:
