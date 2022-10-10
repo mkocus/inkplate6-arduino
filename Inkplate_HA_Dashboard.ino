@@ -53,6 +53,7 @@ void setup() {
   display.begin();
 
   esp_bt_controller_disable();
+//  adc_power_on();
 
 //  display.rtcSetTime(20, 20, 0);
 
@@ -137,7 +138,7 @@ void renderLoop(void* pvParameters ){
       requestUpdate = false;
       display.partialUpdate(false, true);
     }
-    if (currentPage >= 1 && millis() - uptime >= 20000) {
+    if (currentPage >= 1 && millis() - uptime >= 15000) {
       showBaseScreen();
     }
   }
@@ -154,8 +155,8 @@ void showBaseScreen() {
   if (!display.drawImage("http://192.168.50.201:5000/", display.PNG, 0, 0, 1, 0, 1)) {
     Serial.println("ERROR: Image drawing failed!");
   }
-  Serial.println("Image downloaded and displayed.");
-  display.display(true);
+  Serial.println("Image downloaded, decoded and displayed.");
+  display.display();
   sleeper.gotoSleep();
 }
 
