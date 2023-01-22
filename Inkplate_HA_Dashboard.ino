@@ -20,14 +20,14 @@ void btn2cCallback(){ mqtt.gotoDock(); }
 
 // 1st row
 Button btn1a(display, "Lights Off", 100, 100, 200, 100, &btn1aCallback);
-Button btn1b(display, "Xmas Toggle", 400, 100, 200, 100, &btn1bCallback);
+Button btn1b(display, "Xmas Toggle", 400, 100, 400, 100, &btn1bCallback);
 
 // 2nd row
 Button btn2a(display, "Start clean", 100, 300, 200, 100, &btn2aCallback);
 Button btn2b(display, "Stop clean", 400, 300, 200, 100, &btn2bCallback);
 Button btn2c(display, "Go to dock", 700, 300, 200, 100, &btn2cCallback);
 
-Button buttons[] = {btn1a, btn1b, btn2a, btn2b, btn2c};
+Button* buttons[] = {&btn1a, &btn1b, &btn2a, &btn2b, &btn2c};
 
 unsigned long uptime = 0;
 int currentPage = 0;
@@ -103,16 +103,13 @@ void touchLoop(void* pvParameters ){
         Serial.println("Touch: " + String(x[0]) + ", " + String(y[0]));
       }
       bool touched = n > 0;
-      if (btn1a.loop(x[0], y[0], touched) || btn1b.loop(x[0], y[0], touched) || btn2a.loop(x[0], y[0], touched) || btn2b.loop(x[0], y[0], touched) || btn2c.loop(x[0], y[0], touched)) {
-        requestUpdate = true;
-      }
 
-      // for (auto btn : buttons) {
-      //   if (btn.loop(x[0], y[0], touched)) {
-      //     requestUpdate = true;
-      //     break;
-      //   }
-      // }
+      for (auto btn : buttons) {
+        if (btn->loop(x[0], y[0], touched)) {
+          requestUpdate = true;
+          break;
+        }
+      }
     }
   }
 }
@@ -151,7 +148,7 @@ void showControlScreen() {
   Serial.println("Showing control screen");
   currentPage = 1;
   display.selectDisplayMode(INKPLATE_1BIT);
-  for (auto btn: buttons) btn.draw();
+  for (auto btn: buttons) btn->draw();
   display.display(true);
   wifi.fastConnect();
   uptime = millis();
