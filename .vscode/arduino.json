@@ -1,7 +1,7 @@
 {
     "configuration": "PSRAM=enabled,PartitionScheme=huge_app,CPUFreq=240,UploadSpeed=921600,DebugLevel=none",
     "board": "Croduino_Boards:Inkplate:Inkplate6plus",
-    "port": "COM4",
+    "port": "COM3",
     "sketch": "Inkplate_HA_Dashboard.ino",
     "output": "../ArduinoOutput"
 }

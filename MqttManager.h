@@ -29,6 +29,7 @@ public:
     void connect();
     void sendSystemInfo();
     void turnOffAllLights();
+    void turnOffXmasLights();
     void startClean();
     void stopClean();
     void gotoDock();

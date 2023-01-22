@@ -17,6 +17,7 @@ void MqttManager::connect() {
 }
 
 void MqttManager::publishControlMsg(const char* msg) {
+    Serial.println("Sending command: " + String(msg));
     if (!mqttClient.connected()){
         connect();
     }
@@ -57,6 +58,10 @@ void MqttManager::sendSystemInfo() {
 
 void MqttManager::turnOffAllLights() {
     this->publishControlMsg("turnOffAllLights");
+}
+
+void MqttManager::turnOffXmasLights() {
+    this->publishControlMsg("turnOffXmasLights");
 }
 
 void MqttManager::startClean() {
