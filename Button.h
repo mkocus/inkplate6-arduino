@@ -2,10 +2,15 @@
 #define __BUTTON_H__
 
 #include "Inkplate.h"
+#include "Fonts/FreeSansBold12pt7b.h"
 
 typedef void (*CallbackType)();
 
 static int btnInstanceNr = 0;
+
+const int ICON_TEXT_PADDING = 15;
+const int FONT_HEIGHT = 12;
+const int ICON_SIZE = 48;
 
 class Button {
 private:
@@ -29,7 +34,18 @@ private:
 
 public:
     Button(Inkplate& disp, const char* txt, int x, int y, int width, int height, CallbackType callback) 
-      : display(disp), txt(txt), x(x), y(y), w(width), h(height), callback(callback) { instanceNr = btnInstanceNr++; }
+      : display(disp), txt(txt), x(x), y(y), h(height), callback(callback) { 
+      instanceNr = btnInstanceNr++; 
+      roundRadius = height/2;
+
+      // calculate button length dynamically, based on font sizze
+      int16_t xx, yy;
+      uint16_t ww, hh;
+      display.setTextSize(textSize);
+      display.setFont(&FreeSansBold12pt7b);  
+      display.getTextBounds(txt, x, y, &xx, &yy, &ww, &hh);
+      w = height + ICON_TEXT_PADDING + ww + height/2;   // icon + icon/text padding + text + round radius
+    }
 
     void draw();
 

@@ -1,5 +1,6 @@
 #include "Button.h"
-#include "Fonts/FreeSansBold12pt7b.h"
+#include "Bitmaps/lightbulb_b.h"
+#include "Bitmaps/lightbulb_w.h"
 
 bool Button::touchInside(int touchX, int touchY) {
   auto x2 = x + w;
@@ -9,20 +10,24 @@ bool Button::touchInside(int touchX, int touchY) {
 
 void Button::printText() {
   display.setTextSize(textSize);
-  // display.setCursor(x + (w / 2) - (strlen(txt) * 3 * textSize),
-  //                   y + (h / 2) - (4 * textSize));
-  display.setCursor(x + (w / 2) - (strlen(txt) * 6),
-                    y + (h / 2));
-
+  display.setCursor(x + h + ICON_TEXT_PADDING,
+                    y + (h / 2 + FONT_HEIGHT/2));
   display.print(txt);
 }
 
 void Button::draw() {
-  display.fillRoundRect(x, y, w, h, roundRadius, WHITE);
-  display.drawRoundRect(x, y, w, h, roundRadius, BLACK);
-  display.setFont(&FreeSansBold12pt7b);
+  display.fillRoundRect(x, y, w, h, roundRadius, WHITE);    // inner
+  display.drawRoundRect(x, y, w, h, roundRadius, BLACK);    // outer line
+  display.fillRoundRect(x, y, h, h, roundRadius, BLACK);    // icon bg
+  display.drawBitmap(x + (h/2 - ICON_SIZE/2), 
+                     y + (h/2 - ICON_SIZE/2), 
+                     lightbulb_w, 
+                     ICON_SIZE, 
+                     ICON_SIZE, 
+                     WHITE);   // icon
+  display.setFont(&FreeSansBold12pt7b);  
   display.setTextColor(BLACK);
-  this->printText();
+  printText();   // text
 }
 
 void Button::drawInverted() {
@@ -36,7 +41,7 @@ bool Button::loop(int touchX, int touchY, bool touched) {
 
   if (touched && touchInside(touchX, touchY)) {
       Serial.println("Touch in area btn[" + String(instanceNr) + "]");
-      if (now - touchTime > 300) {
+      if (!currentlyClicked) {
         Serial.println("Touch as click for btn[" + String(instanceNr) + "]");
         this->drawInverted();
         currentlyClicked = true;
@@ -47,7 +52,7 @@ bool Button::loop(int touchX, int touchY, bool touched) {
       }
       touchTime = now;
   }
-  else if (currentlyClicked && now - touchTime > 300) {
+  else if (currentlyClicked && now - touchTime > 600) {
     Serial.println("Touch timeout for btn[" + String(instanceNr) + "]");
     this->draw();
     currentlyClicked = false;

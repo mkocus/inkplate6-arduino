@@ -19,19 +19,21 @@ void btn2bCallback(){ mqtt.stopClean(); }
 void btn2cCallback(){ mqtt.gotoDock(); }
 
 // 1st row
-Button btn1a(display, "Lights Off", 100, 100, 200, 100, &btn1aCallback);
-Button btn1b(display, "Xmas Toggle", 400, 100, 400, 100, &btn1bCallback);
+Button btn1a(display, "Lights Off", 100, 100, 200, 50, &btn1aCallback);
+Button btn1b(display, "Xmas Toggle", 400, 100, 400, 75, &btn1bCallback);
 
 // 2nd row
-Button btn2a(display, "Start clean", 100, 300, 200, 100, &btn2aCallback);
-Button btn2b(display, "Stop clean", 400, 300, 200, 100, &btn2bCallback);
-Button btn2c(display, "Go to dock", 700, 300, 200, 100, &btn2cCallback);
+Button btn2a(display, "Start clean", 100, 300, 200, 40, &btn2aCallback);
+Button btn2b(display, "Stop clean", 400, 300, 200, 60, &btn2bCallback);
+Button btn2c(display, "Go to dock", 700, 300, 200, 80, &btn2cCallback);
 
 Button* buttons[] = {&btn1a, &btn1b, &btn2a, &btn2b, &btn2c};
 
 unsigned long uptime = 0;
 int currentPage = 0;
 bool requestUpdate = false;
+
+const unsigned long CONTROL_TIMEOUT_MS = 60000;
 
 // override
 void setup() {
@@ -122,7 +124,7 @@ void renderLoop(void* pvParameters ){
       requestUpdate = false;
       display.partialUpdate(false, true);
     }
-    if (currentPage >= 1 && millis() - uptime >= 15000) {
+    if (currentPage >= 1 && millis() - uptime >= CONTROL_TIMEOUT_MS) {
       showBaseScreen();
     }
   }
